@@ -8,3 +8,6 @@ npm install
 and
 
 npm start
+
+
+localhost:3030/documentation
