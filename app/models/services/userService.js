@@ -31,7 +31,12 @@ async function getUserbyEmail(email)
     const SQL = 
     `SELECT * FROM Users
     WHERE UPPER(Email) = ?`;
-    return await fw.db.execute('local',SQL,[`${email.toUpperCase()}`]);
+    var user = await fw.db.execute('local',SQL,[`${email.toUpperCase()}`]);
+
+    if (user.length) {
+        return user[0];
+    }
+    return user;
 }
 
 async function getUser(id)
@@ -40,7 +45,11 @@ async function getUser(id)
     `SELECT Users.*, Roles.name as role FROM Users
     INNER JOIN Roles ON Users.role_id = Roles.id
     WHERE Users.id = ?`;
-    return await fw.db.execute('local',SQL,[id]);
+    var user = await fw.db.execute('local',SQL,[id]);
+    if (user.length) {
+        return user[0];
+    }
+    return user;
 }
 
 async function addUser(data)

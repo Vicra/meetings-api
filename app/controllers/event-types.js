@@ -19,6 +19,15 @@ function getEventTypeById(request, h)
 {
     return fw.promise(async (resolve,reject) => 
     {
+        if(isNaN(request.params.id))
+        {
+            let stResponse = {
+                success:false,
+                message:'Parameter id is not a number'
+            };
+            resolve(stResponse);
+        }
+
         let response = {
             data:await eventTypeService.getEventTypeById(request.params.id)
         };
@@ -94,8 +103,17 @@ function deleteEventType(request, h)
 {
     return fw.promise(async (resolve,reject) => 
     {
+        if(isNaN(request.params.id))
+        {
+            let stResponse = {
+                success:false,
+                message:'Parameter id is not a number'
+            };
+            resolve(stResponse);
+        }
+
         let stResponse = {success:false,message:''};
-        const eventType = await eventTypeService.getEventTypeById(request.payload.id);
+        const eventType = await eventTypeService.getEventTypeById(request.params.id);
         if(eventType.length != 1)
         {
             stResponse.message = "EventType does not exist";
@@ -103,7 +121,7 @@ function deleteEventType(request, h)
             return;
         }
 
-        await eventTypeService.deleteEventType(request.payload.id);
+        await eventTypeService.deleteEventType(request.params.id);
         stResponse.success = true;
         resolve(stResponse);        
     });    

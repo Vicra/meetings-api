@@ -8,9 +8,19 @@ const eventsService = fw.getService('events');
 //====================
 async function getRooms()
 {
-    const SQL = 
-    `SELECT * FROM Rooms`;
-    return await fw.db.execute('local',SQL);
+    const SQL = `SELECT * FROM Rooms`;
+    let rooms = await fw.db.execute('local',SQL);
+
+    for (var i = 0; i < rooms.length; i++) {
+        const articlesSQL = 
+            `SELECT a.id, a.name, a.description, ra.amount
+            FROM Articles a 
+                INNER JOIN Rooms_Articles ra on ra.article_id = a.id
+                INNER JOIN Rooms r on r.id = ra.room_id
+            WHERE r.id = ?`;
+        rooms[i].articles = await fw.db.execute('local', articlesSQL, [rooms[i].id]);
+    }
+    return rooms;
 }
 
 async function getRoomByName(name)
@@ -25,7 +35,20 @@ async function getRoomById(id)
 {
     const SQL = 
     `SELECT * FROM Rooms WHERE id = ?`;
-    return await fw.db.execute('local',SQL,[id]);
+    let room = await fw.db.execute('local',SQL,[id]);
+    if(room.length > 0)
+    {
+        const articlesSQL = 
+            `SELECT a.id, a.name, a.description, ra.amount
+            FROM Articles a 
+                INNER JOIN Rooms_Articles ra on ra.article_id = a.id
+                INNER JOIN Rooms r on r.id = ra.room_id
+            WHERE r.id = ?`;
+        var articles = await fw.db.execute('local', articlesSQL, [id]);
+
+        room[0].articles = articles;
+        return room[0];
+    }
 }
 
 async function addRoom(data)

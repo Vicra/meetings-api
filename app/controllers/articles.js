@@ -10,7 +10,9 @@ function getArticles(request, h)
 {
     return fw.promise(async (resolve,reject) => 
     {
-        let response = {data:await articlesService.getArticles()};
+        let response = {
+            data: await articlesService.getArticles()
+        };
         resolve(response);
     }); 
 }
@@ -19,6 +21,15 @@ function getArticleById(request, h)
 {
     return fw.promise(async (resolve,reject) => 
     {
+        if(isNaN(request.params.id))
+        {
+            let stResponse = {
+                success:false,
+                message:'Parameter id is not a number'
+            };
+            resolve(stResponse);
+        }
+
         let response = {
             data:await articlesService.getArticleById(request.params.id)
         };
@@ -94,6 +105,15 @@ function deleteArticle(request, h)
 {
     return fw.promise(async (resolve,reject) => 
     {
+        if(isNaN(request.params.id))
+        {
+            let stResponse = {
+                success:false,
+                message:'Parameter id is not a number'
+            };
+            resolve(stResponse);
+        }
+        
         let stResponse = {success:false,message:''};
         const article = await articlesService.getArticle(request.params.id);
         if(article.length != 1)

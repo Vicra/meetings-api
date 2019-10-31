@@ -75,8 +75,17 @@ function deleteRoom(request, h)
 {
     return fw.promise(async (resolve,reject) => 
     {
+        if(isNaN(request.params.id))
+        {
+            let stResponse = {
+                success:false,
+                message:'Parameter id is not a number'
+            };
+            resolve(stResponse);
+        }
+
         let stResponse = {success:false,message:''};
-        const room = await roomsService.getRoom(request.payload.id);
+        const room = await roomsService.getRoom(request.params.id);
         if(room.length != 1)
         {
             stResponse.message = "Room does not exist";
@@ -84,7 +93,7 @@ function deleteRoom(request, h)
             return;
         }
 
-        await roomsService.deleteRoom(request.payload.id);
+        await roomsService.deleteRoom(request.params.id);
         stResponse.success = true;
         resolve(stResponse);        
     });
@@ -96,12 +105,14 @@ function getRooms(request,h)
     {
         try
         {
-            let response = {data:await roomsService.getRooms()};
+            let response = {
+                data: await roomsService.getRooms()
+            };
             resolve(response);
         }
         catch(e)
         {
-            let response = { success:false, errorMessage : "Error in server"};
+            let response = { success:false, errorMessage : "Error in server" + e};
             console.log(response);
             reject(response);
         }
@@ -112,9 +123,20 @@ function getRoomById(request,h)
 {
     return fw.promise(async (resolve,reject) => 
     {
+        if(isNaN(request.params.id))
+        {
+            let stResponse = {
+                success:false,
+                message:'Parameter id is not a number'
+            };
+            resolve(stResponse);
+        }
+
         try
         {
-            let response = {data:await roomsService.getRoomById(request.params.id)};
+            let response = {
+                data: await roomsService.getRoomById(request.params.id)
+            };
             resolve(response);
         }
         catch(e)

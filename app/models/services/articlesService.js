@@ -22,7 +22,11 @@ async function getArticleById(id)
     const SQL = 
     `SELECT * FROM Articles
     WHERE id = ?`;
-    return await fw.db.execute('local',SQL,[id]);
+    var article = await fw.db.execute('local',SQL,[id]);
+    if (article.length) {
+        return article[0];
+    }
+    return article;
 }
 
 async function getArticlesByRoomId(id)

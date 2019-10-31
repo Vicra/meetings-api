@@ -18,7 +18,12 @@ async function getEventTypeById(id)
     const SQL = 
     `SELECT * FROM EventTypes
     WHERE id = ?`;
-    return await fw.db.execute('local',SQL,[id]);
+    var eventType = await fw.db.execute('local',SQL,[id]);
+
+    if (eventType.length) {
+        return eventType[0];
+    }
+    return eventType;
 }
 
 async function addEventType(data)
