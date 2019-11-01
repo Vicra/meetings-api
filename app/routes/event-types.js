@@ -1,6 +1,24 @@
 const EventTypesCtrl = fw.getController('event-types');
 
 module.exports = [{
+        method: 'GET',
+        path: '/event-type',
+        options: {
+            handler: EventTypesCtrl.getEventTypes,
+            tags: ['api'],
+            auth: false
+        }
+    },
+    {
+        method: 'GET',
+        path: '/event-type/{id}',
+        options: {
+            handler: EventTypesCtrl.getEventTypeById,
+            tags: ['api'],
+            auth: false
+        }
+    },
+    {
         method: 'POST',
         path: '/event-type',
         options: {
