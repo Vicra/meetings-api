@@ -1,6 +1,22 @@
 //====================
 // Methods
 //====================
+async function getEvents()
+{
+    const SQL = 
+    `SELECT *
+    FROM Events`;
+    return await fw.db.execute('local',SQL);
+}
+
+async function getEventById(id)
+{
+    const SQL = 
+    `SELECT *
+    FROM Events
+    WHERE id = ?`;
+    return await fw.db.execute('local',SQL, [id]);
+}
 
 async function getUpcomingEvents()
 {
@@ -43,15 +59,13 @@ async function getTodayEvents()
 async function addEvent(data)
 {
     const insertEventSQL = 
-    `INSERT INTO Events
-        (room_id,
+    `INSERT INTO Events (room_id,
         name,
         start_time,
         end_time,
         user_id,
         event_type_id)
-    VALUES
-    (?,?,?,?,?,?)`;
+    VALUES (?,?,?,?,?,?)`;
     var response = await fw.db.execute('local',insertEventSQL,
     [
         data.roomid,
@@ -81,9 +95,26 @@ async function addEvent(data)
     return response;
 }
 
+// pendiente implementacion
+async function editEvent(data)
+{
+    const updateEventSQL = `UPDATE Events
+        SET room_id = ?,
+            name = ?,
+            start_time = ?,
+            end_time = ?,
+            user_id = ?,
+            event_type_id = ?,
+        WHERE id = ?`;
+    return;
+}
+
 module.exports = 
 {
+    getEvents,
+    getEventById,
     getUpcomingEvents,
     getTodayEvents,
-    addEvent
+    addEvent,
+    editEvent
 }

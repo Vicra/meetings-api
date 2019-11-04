@@ -1,5 +1,5 @@
 {
-  "name": "mvc-template",
+  "name": "meetings-api",
   "version": "0.0.1",
   "description": "",
   "main": "./app/sys/server.js",
