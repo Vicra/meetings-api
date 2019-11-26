@@ -12,9 +12,22 @@ async function getEvents()
 async function getEventById(id)
 {
     const SQL = 
-    `SELECT *
-    FROM Events
-    WHERE id = ?`;
+    `SELECT e.*
+    FROM Events e
+    WHERE e.id = ?`;
+    return await fw.db.execute('local',SQL, [id]);
+}
+
+async function getEventsParticipants(id)
+{
+    const SQL =
+    `
+    SELECT u.id, u.name
+    FROM Events e
+    INNER JOIN Events_Participants ep on ep.event_id = e.id
+    INNER JOIN Users u on u.id = ep.user_id
+    WHERE e.id = ?
+    `;
     return await fw.db.execute('local',SQL, [id]);
 }
 
@@ -113,6 +126,7 @@ module.exports =
 {
     getEvents,
     getEventById,
+    getEventsParticipants,
     getUpcomingEvents,
     getTodayEvents,
     addEvent,
