@@ -34,6 +34,28 @@ function getEventById(request, h)
     });    
 }
 
+function getEventsParticipants(request, h)
+{
+    return fw.promise(async (resolve,reject) => 
+    {
+        if(isNaN(request.params.id))
+        {
+            let stResponse = {
+                success:false,
+                message:'Parameter id is not a number'
+            };
+            resolve(stResponse);
+        }
+
+        let stResponse = {
+            data: await eventsService.getEventsParticipants(request.params.id)
+        };
+        resolve(stResponse);
+    });    
+}
+
+
+
 function addEvent(request, h)
 {
     return fw.promise(async (resolve,reject) => 
@@ -87,6 +109,7 @@ module.exports =
 {
     getEvents,
     getEventById,
+    getEventsParticipants,
     addEvent,
     editEvent
 }

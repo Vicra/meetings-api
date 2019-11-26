@@ -12,9 +12,19 @@ async function getEvents()
 async function getEventById(id)
 {
     const SQL = 
-    `SELECT e.*
-    FROM Events e
-    WHERE e.id = ?`;
+    `
+    select 
+        e.id, 
+        e.room_id, 
+        e.name, 
+        DATE_FORMAT(e.start_time, '%Y-%m-%d %T') as start_time, 
+        DATE_FORMAT(e.end_time, '%Y-%m-%d %T') as end_time, 
+        u.name as owner, 
+        e.event_type_id
+    from events e
+    inner join users u on u.id = e.user_id
+    where e.id = ?
+    `;
     return await fw.db.execute('local',SQL, [id]);
 }
 

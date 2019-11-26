@@ -19,6 +19,15 @@ module.exports = [{
         }
     },
     {
+        method: 'GET',
+        path: '/event/{id}/participants',
+        options: {
+            handler: EventsCtrl.getEventsParticipants,
+            tags: ['api'],
+            auth: false
+        }
+    },
+    {
         method: 'POST',
         path: '/event',
         options: {
