@@ -60,23 +60,32 @@ function addEvent(request, h)
 {
     return fw.promise(async (resolve,reject) => 
     {
-        let stResponse = {success:false,message:''};
-
-        const Params = 
+        try
         {
-            name: request.payload.name,
-            eventtype: request.payload.eventtype,
-            roomid: request.payload.roomid,
-            userid: request.payload.userid,
-            bookDate: request.payload.bookDate,
-            starttime: request.payload.starttime,
-            endtime: request.payload.endtime,
-            guests: request.payload.guests
+            let stResponse = {success:false,message:''};
+            const Params = 
+            {
+                name: request.payload.name,
+                eventtype: request.payload.eventtype,
+                roomid: request.payload.roomid,
+                userid: request.payload.userid,
+                bookDate: request.payload.bookDate,
+                starttime: request.payload.starttime,
+                endtime: request.payload.endtime,
+                guests: request.payload.guests
+            }
+            console.log(Params);
+        
+            await eventsService.addEvent(Params);
+            stResponse.success = true;
+            resolve(stResponse);
         }
-    
-        await eventsService.addEvent(Params);
-        stResponse.success = true;
-        resolve(stResponse);
+        catch(e)
+        {
+            console.log(e);
+            let stResponse = {success:false,message:'Unable to add event'};
+            resolve(stResponse);
+        }
     });    
 }
 

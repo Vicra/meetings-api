@@ -4,8 +4,17 @@
 async function getEvents()
 {
     const SQL = 
-    `SELECT *
-    FROM Events`;
+    `
+    select 
+        e.id, 
+        e.room_id, 
+        e.name, 
+        DATE_FORMAT(e.start_time, '%Y-%m-%d %T') as start_time, 
+        DATE_FORMAT(e.end_time, '%Y-%m-%d %T') as end_time, 
+        e.user_id,
+        e.event_type_id
+    from events e
+    `;
     return await fw.db.execute('local',SQL);
 }
 
@@ -111,7 +120,7 @@ async function addEvent(data)
         await fw.db.execute('local',insertParticipantSQL,
         [
             response.insertId,
-            data.guests[i].id,
+            data.guests[i],
             "no"
         ]);
     }
