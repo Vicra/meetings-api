@@ -130,15 +130,45 @@ async function addEvent(data)
 // pendiente implementacion
 async function editEvent(data)
 {
-    const updateEventSQL = `UPDATE Events
+    const updateEventSQL = `
+        UPDATE Events
         SET room_id = ?,
             name = ?,
             start_time = ?,
             end_time = ?,
-            user_id = ?,
-            event_type_id = ?,
+            event_type_id = ?
         WHERE id = ?`;
-    return;
+    
+    var response = await fw.db.execute('local',updateEventSQL,
+    [
+        data.roomid,
+        data.name,
+        data.bookDate + " " + data.starttime + ":00",
+        data.bookDate + " " + data.endtime + ":00",
+        data.eventtype,
+        data.id
+    ]);
+
+    //borrar participantes
+    await fw.db.execute('local',`delete from Events_Participants where event_id = ?`, [data.id]);
+
+    for (var i = 0; i < data.guests.length; i++) {
+        const insertParticipantSQL = 
+        `INSERT INTO Events_Participants
+            (event_id,
+            user_id,
+            confirm_attendance)
+        VALUES
+        (?,?,?)`;
+
+        await fw.db.execute('local',insertParticipantSQL,
+        [
+            data.id,
+            data.guests[i],
+            "no"
+        ]);
+    }
+    return response;
 }
 
 module.exports = 

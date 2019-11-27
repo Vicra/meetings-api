@@ -101,7 +101,6 @@ function editEvent(request, h)
             name: request.payload.name,
             eventtype: request.payload.eventtype,
             roomid: request.payload.roomid,
-            userid: request.payload.userid,
             bookDate: request.payload.bookDate,
             starttime: request.payload.starttime,
             endtime: request.payload.endtime,
