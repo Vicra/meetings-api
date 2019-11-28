@@ -13,7 +13,7 @@ async function getEvents()
         DATE_FORMAT(e.end_time, '%Y-%m-%d %T') as end_time, 
         e.user_id,
         e.event_type_id
-    from events e
+    from Events e
     `;
     return await fw.db.execute('local',SQL);
 }
@@ -30,8 +30,8 @@ async function getEventById(id)
         DATE_FORMAT(e.end_time, '%Y-%m-%d %T') as end_time, 
         u.name as owner, 
         e.event_type_id
-    from events e
-    inner join users u on u.id = e.user_id
+    from Events e
+    inner join Users u on u.id = e.user_id
     where e.id = ?
     `;
     return await fw.db.execute('local',SQL, [id]);
