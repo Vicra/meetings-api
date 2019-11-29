@@ -2,6 +2,7 @@
 // Dependencies
 //====================
 const eventsService = fw.getService('events');
+const roomsService = fw.getService('rooms');
 
 function getEvents(request, h)
 {
@@ -54,7 +55,28 @@ function getEventsParticipants(request, h)
     });    
 }
 
-
+function getTodayEvents(request, h)
+{
+    return fw.promise(async (resolve,reject) => 
+    {
+        let myRooms = [];
+        const rooms = await roomsService.getRooms();
+        for (var i = 0; i < rooms.length; i++) {
+            myRooms.push({
+                id: rooms[i].id,
+                name: rooms[i].name,
+                events: await eventsService.getTodayEventsByRoom(rooms[i].id)
+            });
+        }
+        // let stResponse = {
+        //     data : await eventsService.getTodayEvents()
+        // };
+        let stResponse = {
+            data : myRooms
+        };
+        resolve(stResponse);
+    });    
+}
 
 function addEvent(request, h)
 {
@@ -118,6 +140,7 @@ module.exports =
     getEvents,
     getEventById,
     getEventsParticipants,
+    getTodayEvents,
     addEvent,
     editEvent
 }

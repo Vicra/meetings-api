@@ -56,8 +56,8 @@ async function getUpcomingEvents()
     `SELECT r.name AS 'Room', 
         e.id AS 'EventId', 
         e.name AS 'Event', 
-        e.start_time AS 'StartTime', 
-        e.end_time AS 'EndTime', 
+        DATE_FORMAT(e.start_time, '%Y-%m-%d %T') AS 'StartTime', 
+        DATE_FORMAT(e.end_time, '%Y-%m-%d %T') AS 'EndTime', 
         u.name AS 'Organizer', 
         et.name AS 'EventType'
     FROM Events e
@@ -75,8 +75,8 @@ async function getTodayEvents()
     `SELECT r.name AS 'Room', 
         e.id AS 'EventId', 
         e.name AS 'Event', 
-        e.start_time AS 'StartTime', 
-        e.end_time AS 'EndTime', 
+        DATE_FORMAT(e.start_time, '%Y-%m-%d %T') AS 'StartTime', 
+        DATE_FORMAT(e.end_time, '%Y-%m-%d %T') AS 'EndTime', 
         u.name AS 'Organizer', 
         et.name AS 'EventType'
     FROM Events e
@@ -86,6 +86,26 @@ async function getTodayEvents()
     WHERE DATE(e.start_time) = DATE(NOW())
     ORDER BY e.start_time ASC`;
     return await fw.db.execute('local',SQL);
+}
+
+async function getTodayEventsByRoom(id)
+{
+    const SQL = 
+    `SELECT
+        e.id AS 'EventId', 
+        e.name AS 'Event', 
+        DATE_FORMAT(e.start_time, '%Y-%m-%d %T') AS 'StartTime', 
+        DATE_FORMAT(e.end_time, '%Y-%m-%d %T') AS 'EndTime', 
+        u.name AS 'Organizer', 
+        et.name AS 'EventType'
+    FROM Events e
+    INNER JOIN Rooms r ON r.id = e.room_id
+    INNER JOIN Users u ON u.id = e.user_id
+    INNER JOIN EventTypes et ON et.id = e.event_type_id
+    WHERE DATE(e.start_time) = DATE(NOW())
+    AND r.id = ?
+    ORDER BY e.start_time ASC`;
+    return await fw.db.execute('local',SQL, [id]);
 }
 
 async function addEvent(data)
@@ -178,6 +198,7 @@ module.exports =
     getEventsParticipants,
     getUpcomingEvents,
     getTodayEvents,
+    getTodayEventsByRoom,
     addEvent,
     editEvent
 }

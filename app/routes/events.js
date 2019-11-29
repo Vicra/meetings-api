@@ -28,6 +28,15 @@ module.exports = [{
         }
     },
     {
+        method: 'GET',
+        path: '/event/today',
+        options: {
+            handler: EventsCtrl.getTodayEvents,
+            tags: ['api'],
+            auth: false
+        }
+    },
+    {
         method: 'POST',
         path: '/event',
         options: {
