@@ -36,6 +36,7 @@ module.exports = [{
             auth: false
         }
     },
+    //test
     {
         method: 'POST',
         path: '/event',
